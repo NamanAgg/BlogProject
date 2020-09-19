@@ -28,14 +28,16 @@ app.get("/",(req,res)=>{
     if(err)
     console.log(err);
     else
-    {notes=blogs;
-      console.log(notes);
+    {
+      res.render("home",{
+        startingContent:homeStartingContent,
+        posts:blogs
+      });
+      notes=blogs;
     }
+
   });
-  res.render("home",{
-    startingContent:homeStartingContent,
-    posts:notes
-  });
+
 
 });
 app.get("/contact",(req,res)=>{
