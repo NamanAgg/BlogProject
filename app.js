@@ -13,14 +13,25 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 
 const app = express();
 app.set('view engine', 'ejs');
-mongoose.connect("mongodb://localhost:27017/blogDB",{useNewurlParser:true});
+mongoose.connect("mongodb://localhost:27017/blogDB",{useNewUrlParser:true});
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
-
-
-
+const blogSchema=new mongoose.Schema({
+    title:String,
+    postTitle:String
+});
+const Blog=mongoose.model("Blog",blogSchema);
 let notes=[];
+
 app.get("/",(req,res)=>{
+  Blog.find((err,blogs)=>{
+    if(err)
+    console.log(err);
+    else
+    {notes=blogs;
+      console.log(notes);
+    }
+  });
   res.render("home",{
     startingContent:homeStartingContent,
     posts:notes
@@ -37,11 +48,11 @@ app.get("/compose",(req,res)=>{
   res.render("compose");
 });
 app.post("/compose",(req,res)=>{
-const note={
+let note= new Blog({
   title:req.body.title,
   postTitle:req.body.content
-  };
-notes.push(note);
+});
+note.save();
 res.redirect("/");
 });
 
